@@ -1,4 +1,4 @@
-#**Behavioral Cloning** 
+**Behavioral Cloning** 
 
 
 ---
@@ -111,7 +111,7 @@ Fully Connected: 1
 
 Model Architecture:
 
-![Model Architecture][../modelArchitecture.png]
+![Model Architecture](../modelArchitecture.png)
 
 OR
 
@@ -123,8 +123,8 @@ To capture good driving behavior, I first recorded two laps on track one using c
 
 To augment the data sat, I also flipped images and angles thinking that this would alleviate the bias toward on direction. After the collection process, I had more than 612,000 number of data points. I then preprocessed this data by trimming the image to remove the background (see images below). Normalization is also performed in the first stage of the model.
 
-![Original][../original.jpg]
-![Cropped Image][../cropped.jpg]
+![Original](../original.jpg)
+![Cropped Image](../cropped.jpg)
 
 I finally randomly shuffled the data set and put 25% of the data into a validation set. 
 
