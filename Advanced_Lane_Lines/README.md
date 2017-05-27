@@ -7,8 +7,8 @@ The steps of this project are the following:
 * Setups
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S1.  Compute the camera calibration matrix and distortion coefficients given a set of chessboard images  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S2.  Obtain warp matrix for perspective transform  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S3.  Setup helper functions for color transform / thresholding  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S2.  Setup helper functions for color transform / thresholding  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S3.  Obtain warp matrix for perspective transform  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S4.  Setup helper functions for lane recognition  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S5.  Setup helper functions for curvature calculation  
 
@@ -51,37 +51,30 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 When this is applied to the actual road image, it looks like below. Differences can be observed on the bottom left and right corners.
 ![Figure: Calibrated Image](outputs/imageUndistort.png)
 
-#### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
+### S2. Color Transform
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+I first put 'region of interest' mask for each left lane and right lane, since it is inevitable that these color thresholding takes up many sorrounding noises if they have similar color as lanes.  
+I used H- and S- channels of HLS transform, and R- channel of RGB transform, as I found these three to be most important from experiments. In particular, H- channel is good at taking up yellowu-like color, S- is for bright color in general (i.e. both yellow and white), and R- takes up white color very well. Since H- and S- takes up lots of sorrunding noise as well, I made a mask `(H-Channel & S-Channel | R-Channel)`. In the code, helper functions for all types of color transforms are available. Shown below is an example how the image is transformed after each masking, as well as all 3 combined.
 
-![alt text][image3]
+![Figure: Applying region of interest](output/regionOfInterest.png)
+![Figure: Effects of 3 color masks](output/colorTransform.png)
+![Figure: Effects of all masks combined](output/colorTransformCombined.png)
 
-#### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
+#### S3. Perspective Transform
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
-
-```python
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
-```
+The code for my perspective transform is in "S3. Perspective Transform" of IPython Notebook. It uses openCV function, `cv2.getPerspectiveTransform`, which takes source and destination points and returns warp matrix, `M`.  I chose the hardcode the source and destination points by observation.
 
 This resulted in the following source and destination points:
 
+warpSrc = np.float32([[430.5, 566], [867.7, 566],[1052, 682],[269, 682]])
+warpDst = np.float32([[269, 566], [1052, 566], [1052, 682], [269, 682]])
+
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
+| 430.5, 566      | 269, 566        | 
+| 867.7, 566      | 1052, 566      |
+| 1052, 682     | 1052, 682      |
+| 269, 682      | 269, 682        |
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
