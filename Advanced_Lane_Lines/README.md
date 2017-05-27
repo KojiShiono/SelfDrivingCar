@@ -56,9 +56,9 @@ When this is applied to the actual road image, it looks like below. Differences 
 I first put 'region of interest' mask for each left lane and right lane, since it is inevitable that these color thresholding takes up many sorrounding noises if they have similar color as lanes.  
 I used H- and S- channels of HLS transform, and R- channel of RGB transform, as I found these three to be most important from experiments. In particular, H- channel is good at taking up yellowu-like color, S- is for bright color in general (i.e. both yellow and white), and R- takes up white color very well. Since H- and S- takes up lots of sorrunding noise as well, I made a mask `(H-Channel & S-Channel | R-Channel)`. In the code, helper functions for all types of color transforms are available. Shown below is an example how the image is transformed after each masking, as well as all 3 combined.
 
-![Figure: Applying region of interest](output/regionOfInterest.png)
-![Figure: Effects of 3 color masks](output/colorTransform.png)
-![Figure: Effects of all masks combined](output/colorTransformCombined.png)
+![Figure: Applying region of interest](outputs/regionOfInterest.png)
+![Figure: Effects of 3 color masks](outputs/colorTransform.png)
+![Figure: Effects of all masks combined](outputs/colorTransformCombined.png)
 
 #### S3. Perspective Transform
 
