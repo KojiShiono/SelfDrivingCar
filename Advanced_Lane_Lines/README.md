@@ -82,7 +82,7 @@ I verified that my perspective transform was working as expected by drawing the 
 
 #### S4/A4. Lane recognition
 
-This is the key part of my algorithm. For polynomial fitting, two different algorithms are applied, based on whether lane was found in previous iteration or not. When previous lane presents, the algorithm only searches new line around the previous line. When no line was found in the previous iteration, however, search with sliding windows is performed as shown in the image below.
+This is the key part of my algorithm. For polynomial fitting, two different algorithms are applied, based on whether lane was found in previous iteration or not. When previous lane presents, the algorithm only searches new line around the previous line. When no line was found in the previous iteration, however, search with sliding windows is performed. It takes histogram of the image, where lane lines show higher histogram value if color transform was performed properly. Shown below is an example of the output.
 
 ![Figure: Polynomial fitting](outputs/windowSearch.png)
 
