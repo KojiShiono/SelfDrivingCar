@@ -32,13 +32,13 @@ The steps of this project are the following:
 [image6]: ./examples/example_output.jpg "Output"
 [video1]: ./project_video.mp4 "Video"
 
-## [Rubric Points](https://review.udacity.com/#!/rubrics/571/view)
+### [Rubric Points](https://review.udacity.com/#!/rubrics/571/view)
 
-### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
+#### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
 ---
 
-### S1. Camera Calibration
+#### S1/A1. Camera Calibration
 
 The code for this step is contained in [IPython notebook](advLaneFind.ipynb), section "S1. Get camera calibration matrix".
 
@@ -51,16 +51,16 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 When this is applied to the actual road image, it looks like below. Differences can be observed on the bottom left and right corners.
 ![Figure: Calibrated Image](outputs/imageUndistort.png)
 
-### S2. Color Transform
+#### S2/A2. Color Transform
 
 I first put 'region of interest' mask for each left lane and right lane, since it is inevitable that these color thresholding takes up many sorrounding noises if they have similar color as lanes.  
-I used H- and S- channels of HLS transform, and R- channel of RGB transform, as I found these three to be most important from experiments. In particular, H- channel is good at taking up yellowu-like color, S- is for bright color in general (i.e. both yellow and white), and R- takes up white color very well. Since H- and S- takes up lots of sorrunding noise as well, I made a mask `(H-Channel & S-Channel | R-Channel)`. In the code, helper functions for all types of color transforms are available. Shown below is an example how the image is transformed after each masking, as well as all 3 combined.
+I used H- and S- channels of HLS transform, and R- channel of RGB transform, as I found these three to be most important from experiments. In particular, H- channel is good at taking up yellowu-like color, S- is for bright color in general (i.e. both yellow and white), and R- takes up white color very well. Since H- and S- takes up lots of sorrunding noise as well, I made a mask `(H-Channel & S-Channel | R-Channel)`. In the code, helper functions for all types of color transforms are available. Shown below are an example how the image is transformed after each masking, as well as all 3 combined.
 
 ![Figure: Applying region of interest](outputs/regionOfInterest.png)
 ![Figure: Effects of 3 color masks](outputs/colorTransform.png)
 ![Figure: Effects of all masks combined](outputs/colorTransformCombined.png)
 
-#### S3. Perspective Transform
+#### S3/A3. Perspective Transform
 
 The code for my perspective transform is in "S3. Perspective Transform" of IPython Notebook. It uses openCV function, `cv2.getPerspectiveTransform`, which takes source and destination points and returns warp matrix, `M`.  I chose the hardcode the source and destination points by observation.
 
@@ -78,31 +78,43 @@ warpDst = np.float32([[269, 566], [1052, 566], [1052, 682], [269, 682]])
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
-![alt text][image4]
+![Figure: Source points vs Destination points](outputs/src_vs_dst.png)
 
-#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+#### S4/A4. Lane recognition
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+This is the key part of my algorithm. For polynomial fitting, two different algorithms are applied, based on whether lane was found in previous iteration or not. When previous lane presents, the algorithm only searches new line around the previous line. When no line was found in the previous iteration, however, search with sliding windows is performed as shown in the image below.
 
-![alt text][image5]
+![Figure: Polynomial fitting](outputs/windowSearch.png)
 
-#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+Since real road images contain many noises, including different color on pavement or going through shaded area, I implemented following 3 filters to assure the lane lines to exist in resonable position. These filters can be triggered by setting flags, `confidenceCheck`, `polynomialCheck`, and `segmentCheck`.
 
-I did this in lines # through # in my code in `my_other_file.py`
+`confidenceCheck` sees how confident the algorithm predicted new lines, which is defined as the number of points taken for the polynomial fitting. If this number is low, it means the new polynomial fitting is uncertain. When low confidence is returned more than certain times, the following happens:
+* If one of the left or right lines has high confidence, shift it to the side with low confidence
+* If both lines have low confidence, keep the measurement from previous iteration
 
-#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+`polynomialCheck` checks if the polynomial coefficient, `a` in `ax^2 + bx + c`, is similar between left and right lanes. This is due to the fact that road lanes are almost parallel to each other, as well as the change in road curvature is continuous (no huge gap in 1 video frame). If the difference of `a` value between left and right is large, following calculation happens:
+* Compare the `a` value of each lane with the previous iteration, and the one with bigger difference would be replaced with the one with smaller difference
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+`segmentCheck` assures the lanes are starting from two edges of the hood, which should be always the case unless lane-change is happening. `c` value in the polynomial equation is used as the measurement, and in order to align the `c` value with the bottom of the image, the image is flipped before fed into the algorithm. If the segment is found to be in unreasonable range, the following is executed:
+* If one of the left or right segments is out of range, take the `a` and `b` value from the other lane and use the segment from the previous iteration
+* If both of left and right segments are out of range, keep the measurement from previous iteration
 
-![alt text][image6]
+#### S5/A5. Radius of curvature and vehicle position in the lane
+
+The code is in `def curvatureCalc()`. The calculation is based on the formula, provided by Udacity, shown in the image below.
+
+![Figure: Formula for curvature calculation](outputs/radiusOfCurvature.png)
+
+#### A6+A7. Warp back and plot onto original image
+
+I used the inverse warp matrix that is calculated in S3/A3 to convert warped lane area to lane area in normal perspective. Code is in `def warpBackLines()` and `advLaneFind()`. Shown below is an example of my result on a test image:
+
+![Figure: Final output](outputs/laneDetection.png)
 
 ---
 
-### Pipeline (video)
-
-#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
-
-Here's a [link to my video result](./project_video.mp4)
+### Video Output
+Here's a [link to my video result](outputs/project_video.mp4)
 
 ---
 
