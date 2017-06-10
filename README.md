@@ -1,4 +1,4 @@
-NOTE: Completed projects are marked as "release", others are under development
+NOTE: Completed projects are marked as "release", others are under development  
 YouTube Channel: https://www.youtube.com/channel/UCDFnHjqEMFPv_JVh1GN0fxg
 # SelfDrivingCar
 Sourcecodes of my projects from Udacity Self Driving Car Nanodegree program.
