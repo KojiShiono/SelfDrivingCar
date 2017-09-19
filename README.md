@@ -12,3 +12,8 @@ All codes are open-sourced: please make a citation when you use! :)
 - Behavioral Cloning (Autopilot on Simulator with Convolutional Neural Network)
 - Traffic Sign Classifier
 - (Release 1.0.0) Advanced Lane Recognition and Vehicle Detection System
+- Extended Kalman Filter
+- (Code/video uploaded, pending final check) Unscented Kalman Filter
+- Kidnapped Vehicle (Localization with Particle Filter)
+- PID Controller
+- Model Predictive Controller
