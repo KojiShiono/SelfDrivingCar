@@ -1,11 +1,12 @@
 Output video: https://youtu.be/CgBlXIfS-X0
 
-## Below, instructions given by Udacity:
----------------
-# CarND-Controls-MPC
-Self-Driving Car Engineer Nanodegree Program
-
+# Model Predictive Control Project
 ---
+
+
+## Below, instructions given by Udacity:
+### Dependencies are necessary to run this code properly
+---------------
 
 ## Dependencies
 
