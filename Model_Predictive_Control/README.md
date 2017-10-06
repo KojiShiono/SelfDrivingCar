@@ -6,7 +6,7 @@ Output video: https://youtu.be/CgBlXIfS-X0
 Model predictive controller (MPC) is a type of controller that uses physical model to generate the optimal trajectory for the vehicle to follow. MPC simulates different actuator inputs to generate trajectories, and then find the optimal ... Since MPC is actively predicting future vehicle states, it is more robust against latency in the actuator than PID controller.
 
 In this project, kinematic vehicle model was used, and the states are given as following equations:
-![alt text](model_eq.png "Kinematcs Equation, Image courtecy: Udacity")
+!["Kinematcs Equation, Image courtecy: Udacity"](model_eq.png)
 
 ### Choosing hyperparameters
 dt (time between each timestamp) is set to 50ms, while timestamp length N was chosen to be 13. Given kinematic equation is still an approximaion for very short duration, it is important to keep dt small enough. If it is too small, however, MPC needs very large N to see far enough future, which makes computation very expensive. 
