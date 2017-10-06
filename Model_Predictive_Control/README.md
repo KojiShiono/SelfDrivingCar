@@ -7,6 +7,7 @@ Model predictive controller (MPC) is a type of controller that uses physical mod
 
 In this project, kinematic vehicle model was used, and the states are given as following equations:
 !["Kinematcs Equation, Image courtecy: Udacity"](model_eq.png)
+["Kinematcs Equation, Image courtecy: Udacity"]
 
 ### Choosing hyperparameters
 dt (time between each timestamp) is set to 50ms, while timestamp length N was chosen to be 13. Given kinematic equation is still an approximaion for very short duration, it is important to keep dt small enough. If it is too small, however, MPC needs very large N to see far enough future, which makes computation very expensive. 
