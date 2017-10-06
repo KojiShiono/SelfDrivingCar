@@ -76,10 +76,11 @@ int main() {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
-    size_t N = 13;
+    size_t N = 10;
+    size_t t = 0;
 
     string sdata = string(data).substr(0, length);
-    cout << sdata << endl;
+    // cout << sdata << endl;
     if (sdata.size() > 2 && sdata[0] == '4' && sdata[1] == '2') {
       string s = hasData(sdata);
       if (s != "") {
@@ -115,13 +116,25 @@ int main() {
           double cte = polyeval(coeffs, 0);
           double epsi = -atan(coeffs[1]);
 
+          double x_in, y_in, psi_in, steer_value, throttle_value;
+          const double Lf = 2.67;
+          if (t==0){
+            t++;
+            steer_value = 0;
+            throttle_value = 0;
+          }
+          v += throttle_value * 0.1;
+          psi_in = v/Lf*steer_value*0.1;
+          x_in = v*cos(psi_in)*0.1;
+          y_in = v*sin(psi_in)*0.1;
+          
           Eigen::VectorXd state(6);
-          state << 0, 0, 0, v, cte, epsi;
+          state << x_in, y_in, psi_in, v, cte, epsi;
 
           auto vars = mpc.Solve(state, coeffs);
 
-          double steer_value = vars[0]; 
-          double throttle_value = vars[1]; 
+          steer_value = vars[0]; 
+          throttle_value = vars[1]; 
 
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
@@ -159,7 +172,6 @@ int main() {
 
           msgJson["next_x"] = next_x_vals;
           msgJson["next_y"] = next_y_vals;
-
 
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           //std::cout << msg << std::endl;

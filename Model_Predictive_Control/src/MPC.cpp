@@ -6,7 +6,7 @@
 using CppAD::AD;
 
 // TODO: Set the timestep length and duration
-size_t N = 13;
+size_t N = 10;
 double dt = 0.05; // 50ms
 size_t stepsToSkip = 0.1/dt;
 // ^ To accomodate latency. For example, if dt = 0.1s, 1 step corresponds to 100ms
@@ -59,23 +59,23 @@ class FG_eval {
     // cost based on error between reference and actual state
     for (int t=0; t<N; t++)
     {
-      fg[0] += 60.0 * CppAD::pow(vars[cte_start + t], 2); // 60
-      fg[0] += 500.0 * CppAD::pow(vars[epsi_start + t], 2); //1.2
-      fg[0] += 1.0 * CppAD::pow((vars[v_start + t] - ref_v), 2);
+      fg[0] += 10.0 * CppAD::pow(vars[cte_start + t], 2); // 60
+      fg[0] += 100.0 * CppAD::pow(vars[epsi_start + t], 2); //500
+      fg[0] += 1.0 * CppAD::pow((vars[v_start + t] - ref_v), 2); // 1.0
     }
 
     // cost of using actuators (better smoothness, less damage to mechanical components etc.)
     for (int t=0; t<N-1; t++)
     {
-      fg[0] += 2200.0 * CppAD::pow(vars[delta_start + t], 2); //30
-      fg[0] += 1.0 * CppAD::pow(vars[a_start + t], 2);
+      fg[0] += 2000.0 * CppAD::pow(vars[delta_start + t], 2); //2200
+      fg[0] += 1.0 * CppAD::pow(vars[a_start + t], 2); //1.0
     }
 
     // cost of the change in actuator value
     for (int t=0; t<N-2; t++)
     {
-      fg[0] += 300000 * CppAD::pow((vars[delta_start + t+1] - vars[delta_start + t]), 2); //2500
-      fg[0] += 1.0 * CppAD::pow((vars[a_start + t+1] - vars[a_start]), 2);
+      fg[0] += 300000 * CppAD::pow((vars[delta_start + t+1] - vars[delta_start + t]), 2); //300000
+      fg[0] += 1.0 * CppAD::pow((vars[a_start + t+1] - vars[a_start]), 2); //1.0
     }
 
     //
@@ -252,8 +252,8 @@ vector<double> MPC::Solve(Eigen::VectorXd x0, Eigen::VectorXd coeffs) {
 
   vector<double> result(2 + (N-1)*2);
 
-  result[0] = solution.x[delta_start + stepsToSkip];
-  result[1] = solution.x[a_start + stepsToSkip];
+  result[0] = solution.x[delta_start];
+  result[1] = solution.x[a_start];
 
   for (int i=0; i<N-1; i++)
   {
