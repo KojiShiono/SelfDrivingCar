@@ -2,11 +2,25 @@ Output video: https://youtu.be/CgBlXIfS-X0
 
 # Model Predictive Control Project
 ---
+### Overview
+Model predictive controller (MPC) is a type of controller that uses physical model to decide the optimal actuator commands for the vehicle. MPC simulates different actuator commands to generate trajectories, and then find the optimal one by minimizing the cost function. The cost function is defined based on the importance of each factor. Since MPC is actively predicting future vehicle states, it is more robust against latency in the actuator than PID controller.
 
+In this project, kinematic vehicle model was used, and the states are given as following equations:
+!["Kinematic Equations, image courtecy: Udacity"](model_eq.png)
+[Image 1: Kinematic Equations, image courtecy: Udacity]
 
+### Choosing hyperparameters
+dt (time between each timestamp) is set to 50ms, while timestamp length N was chosen to be 13. Given kinematic equation is still an approximaion for very short duration, it is important to keep dt small enough. If it is too small, however, MPC needs very large N to see far enough future, which makes computation very expensive. 
+For fixed dt, N defines how far distant future MPC would take into account. Having too small N would not give useful prediction of future state, while too large N would make optimization computationally costly. In addition, depending on the order of the fitted polynomial, too large N can result in suboptimal trajectory. 
+For instance, in this project, the order of the polynomial is 3, and when the polynomial covers 2 or more corners ahead, it tends to fit "S-shaped line" instead of "corner-straight-corner". Therefore, the value N was chosen to cover only 1 corner ahead. Also note that the coverage increases as the vehicle speed goes up.
+
+Previously tried values are: dt = [10ms, 100ms, 500ms] and N = [10:25]
+
+### Handling the latency
+As mentioned above, one of the advantages using MPC is its robustness against latency. Especially in the real-world system, latency in actuation of physical components is inevitable. For this project, the physical latency is simulated as 100ms, and I dealt with it by taking the actuation commands of 2 prediction points ahead, given each point is 50ms apart.
+
+---
 ## Below, instructions given by Udacity:
-### Dependencies are necessary to run this code properly
----------------
 
 ## Dependencies
 
