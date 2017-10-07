@@ -6,8 +6,8 @@
 using CppAD::AD;
 
 // TODO: Set the timestep length and duration
-size_t N = 10;
-double dt = 0.05; // 50ms
+size_t N = 9;
+double dt = 0.1; // 50ms
 size_t stepsToSkip = 0.1/dt;
 // ^ To accomodate latency. For example, if dt = 0.1s, 1 step corresponds to 100ms
 
@@ -25,7 +25,7 @@ const double Lf = 2.67;
 
 // NOTE: feel free to play around with this
 // or do something completely different
-double ref_v = 70;
+double ref_v = 110 *0.44704; // mph -> m/s
 
 // The solver takes all the state variables and actuator
 // variables in a singular vector. Thus, we should to establish
@@ -59,23 +59,23 @@ class FG_eval {
     // cost based on error between reference and actual state
     for (int t=0; t<N; t++)
     {
-      fg[0] += 10.0 * CppAD::pow(vars[cte_start + t], 2); // 60
-      fg[0] += 100.0 * CppAD::pow(vars[epsi_start + t], 2); //500
-      fg[0] += 1.0 * CppAD::pow((vars[v_start + t] - ref_v), 2); // 1.0
+      fg[0] += 9.0 * CppAD::pow(vars[cte_start + t], 2); // 10
+      fg[0] += 7000.0 * CppAD::pow(vars[epsi_start + t], 2); //100
+      fg[0] += 0.6 * CppAD::pow((vars[v_start + t] - ref_v), 2); // 1.0
     }
 
     // cost of using actuators (better smoothness, less damage to mechanical components etc.)
     for (int t=0; t<N-1; t++)
     {
-      fg[0] += 2000.0 * CppAD::pow(vars[delta_start + t], 2); //2200
-      fg[0] += 1.0 * CppAD::pow(vars[a_start + t], 2); //1.0
+      fg[0] += 700.0 * CppAD::pow(vars[delta_start + t], 2); //2000
+      fg[0] += 0.1 * CppAD::pow(vars[a_start + t], 2); //1.0
     }
 
     // cost of the change in actuator value
     for (int t=0; t<N-2; t++)
     {
-      fg[0] += 300000 * CppAD::pow((vars[delta_start + t+1] - vars[delta_start + t]), 2); //300000
-      fg[0] += 10.0 * CppAD::pow((vars[a_start + t+1] - vars[a_start]), 2); //1.0
+      fg[0] += 350000 * CppAD::pow((vars[delta_start + t+1] - vars[delta_start + t]), 2); //300000
+      fg[0] += 0.1 * CppAD::pow((vars[a_start + t+1] - vars[a_start]), 2); //1.0
     }
 
     //

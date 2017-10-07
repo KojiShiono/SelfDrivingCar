@@ -76,7 +76,7 @@ int main() {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
-    size_t N = 10;
+    size_t N = 9;
     size_t t = 0;
 
     string sdata = string(data).substr(0, length);
@@ -95,6 +95,7 @@ int main() {
           double py = j[1]["y"];
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
+          v *= 0.44704; // mph -> m/s
 
           // Convert to VectorXd for as polyfit() function expects this datatype
           Eigen::VectorXd ptsx_eigen(ptsx.size());
@@ -124,11 +125,11 @@ int main() {
           }
           double delta = j[1]["steering_angle"];
           double a = j[1]["throttle"];
-          double latency = 0.1;
+          double latency = 0.125;
           delta *= -1;
 
-          x_in = v*cos(delta)*latency;
-          y_in = v*sin(delta)*latency;
+          x_in = v*latency;
+          y_in = 0;
           epsi += v*delta*latency/Lf;
           cte += v*sin(epsi)*latency;
           psi_in = v/Lf*steer_value*latency;
