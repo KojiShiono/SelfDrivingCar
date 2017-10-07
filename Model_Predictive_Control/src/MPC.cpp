@@ -25,7 +25,7 @@ const double Lf = 2.67;
 
 // NOTE: feel free to play around with this
 // or do something completely different
-double ref_v = 60;
+double ref_v = 70;
 
 // The solver takes all the state variables and actuator
 // variables in a singular vector. Thus, we should to establish
@@ -75,7 +75,7 @@ class FG_eval {
     for (int t=0; t<N-2; t++)
     {
       fg[0] += 300000 * CppAD::pow((vars[delta_start + t+1] - vars[delta_start + t]), 2); //300000
-      fg[0] += 1.0 * CppAD::pow((vars[a_start + t+1] - vars[a_start]), 2); //1.0
+      fg[0] += 10.0 * CppAD::pow((vars[a_start + t+1] - vars[a_start]), 2); //1.0
     }
 
     //
@@ -145,7 +145,7 @@ MPC::MPC() {}
 MPC::~MPC() {}
 
 vector<double> MPC::Solve(Eigen::VectorXd x0, Eigen::VectorXd coeffs) {
-  size_t i;
+  //size_t i;
   typedef CPPAD_TESTVECTOR(double) Dvector;
 
   double x = x0[0];
