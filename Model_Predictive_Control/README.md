@@ -1,4 +1,4 @@
-Output video: https://youtu.be/CgBlXIfS-X0
+Output video: https://youtu.be/bjJGUeRKUJg
 
 # Model Predictive Control Project
 ---
@@ -10,7 +10,7 @@ In this project, kinematic vehicle model was used, and the states are given as f
 [Image 1: Kinematic Equations, image courtecy: Udacity]
 
 ### Choosing hyperparameters
-dt (time between each timestamp) is set to 50ms, while timestamp length N was chosen to be 10. Given kinematic equation is still an approximaion for very short duration, it is important to keep dt small enough. If it is too small, however, MPC needs very large N to see far enough future, which makes computation very expensive. 
+dt (time between each timestamp) is set to 100ms, while timestamp length N was chosen to be 9. Given kinematic equation is still an approximaion for very short duration, it is important to keep dt small enough. If it is too small, however, MPC needs very large N to see far enough future, which makes computation very expensive. 
 For fixed dt, N defines how far distant future MPC would take into account. Having too small N would not give useful prediction of future state, while too large N would make optimization computationally costly. In addition, depending on the order of the fitted polynomial, too large N can result in suboptimal trajectory. 
 For instance, in this project, the order of the polynomial is 3, and when the polynomial covers 2 or more corners ahead, it tends to fit "S-shaped line" instead of "corner-straight-corner". Therefore, the value N was chosen to cover only 1 corner ahead. Also note that the coverage increases as the vehicle speed goes up.
 
