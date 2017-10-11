@@ -8,11 +8,12 @@ Sourcecodes of my projects from Udacity Self Driving Car Nanodegree program.
 All codes are open-sourced: please make a citation when you use! :)
 
 ### Project List and (brief) Description
+- (Release 1.0.0) Advanced Lane Recognition and Vehicle Detection System
+- (Release 1.0.0) Model Predictive Controller
+- (Code/video uploaded, pending final check) Unscented Kalman Filter
 - Behavioral Cloning (Autopilot on Simulator with Convolutional Neural Network)
 - Traffic Sign Classifier
-- (Release 1.0.0) Advanced Lane Recognition and Vehicle Detection System
 - Extended Kalman Filter
-- (Code/video uploaded, pending final check) Unscented Kalman Filter
 - Kidnapped Vehicle (Localization with Particle Filter)
 - PID Controller
-- Model Predictive Controller
+
