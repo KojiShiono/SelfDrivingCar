@@ -1,3 +1,5 @@
+## Output video: https://www.youtube.com/watch?v=Rjo2QN6ICC0
+
 ## Advanced Lane Finding Project
 
 The goal of this project is to identify and mark the driving lanes in the provided input images/videos.  
