@@ -19,7 +19,7 @@ When the ego vehicle passes others, it starts adjusting the speed to the vehicle
 #### 3. Trajectory Generation
 For trajectory generation, I followed the method that was introduced in Udacity's tutorial. Namely, instead of finding the path (50 waypoints) right away, this method will find 5 "anchor points", 2 from previous iteration and 3 from new, fit spline to them, and then generates new waypoints so that the total number would be 50 again. In other words, this method keeps the previous waypoints that were unused. The biggest advantage of this method is the smoothness of the trajectory. Spline is very capable of fitting a smooth curve over the 5 anchor points, and since we are picking the rest of the points _from_ the fitted spline, the resulting tragectory is guaranteed to be smooth as well.
 
-I would like to give special thanks to Spline (http://kluge.in-chemnitz.de/opensource/spline/). This allowed me to generate jerk-free trajectory almost effortlessly.
+I would like to give special thanks to Spline (http://kluge.in-chemnitz.de/opensource/spline/). This fantastic open-sourced code allowed me to generate jerk-free trajectory almost effortlessly.
 
 -------------
 ### Below original ReadMe from Udacity
