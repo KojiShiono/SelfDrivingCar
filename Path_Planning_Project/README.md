@@ -8,7 +8,7 @@ The purpose of this project is to design a path planner that determines where to
 
 There are two steps involved in my code. The first step is to state estimation and the second is trajectory generation. I chose to use trajectory generation as this is more suitable to sparse environment like the highway, while other methods, Hybrid A* for example, is better at dense environment like parking spots.
 
-### 2. State Estimation (line 345-402)
+### 2. State Estimation (main.cpp, line 345-402)
 ![alt text](StateMachine.png)
 I found above 5 states to be sufficient for this task. The vehicle is commanded to stay in the middle or right lane by default, unless there is a slow traffic ahead. When slow traffic is detected, the vehicle first tries to pass from the left. If such is not possible, then it tries to pass from right. Note that passing from right is not a well-mannered maneuver, therefore passing from left is considered first. If neither is possible, the vehicle stays in the same lane and adjust the speed to the car in front of it.
 
@@ -16,7 +16,7 @@ Once the vehicle passes the slower ones from left side, it would return to the m
 
 When the ego vehicle passes others, it starts adjusting the speed to the vehicle in the new lane, immediately after the path is confirmed to be clear. The "counter" is introduced to avoid the ego vehicle to swing back to the original lane before it completes the lane shift. Without this, the vehicle may swing between two lanes and it often results in driving right above the lane line, which we must avoid.
 
-### 3. Trajectory Generation (line 405-500)
+### 3. Trajectory Generation (main.cpp, line 405-500)
 For trajectory generation, I followed the method that was introduced in Udacity's tutorial. Namely, instead of finding the path (50 waypoints) right away, this method will find 5 "anchor points", 2 from previous iteration and 3 from new, fit spline to them, and then generates new waypoints so that the total number would be 50 again. In other words, this method keeps the previous waypoints that were unused. The biggest advantage of this method is the smoothness of the trajectory. Spline is very capable of fitting a smooth curve over the 5 anchor points, and since we are picking the rest of the points _from_ the fitted spline, the resulting tragectory is guaranteed to be smooth as well.
 
 I would like to give special thanks to Spline (http://kluge.in-chemnitz.de/opensource/spline/). This fantastic open-sourced code allowed me to generate jerk-free trajectory almost effortlessly.
