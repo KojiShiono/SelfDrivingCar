@@ -399,22 +399,7 @@ int main() {
               }
 
             }
-            /*
-            if (state == 1){
-              cout << "too_close: " << too_close << endl;
-              cout << "ref_vel: " << ref_vel << endl;
-              cout << "left_clear: " << left_clear << endl;
-            }
-            */
-            /*
-            if (state == 3){
-              cout << "too_close: " << too_close << endl;
-              cout << "ref_vel: " << ref_vel << endl;
-              cout << "right_clear: " << right_clear << endl;
-            }
-            */
-            // cout << "lane: " << lane << endl;
-            //cout << "state: " << state << endl;
+            // State Machine end
 
 
             // widely spaces waypoints
