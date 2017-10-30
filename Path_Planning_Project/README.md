@@ -9,7 +9,7 @@ The purpose of this project is to design a path planner that determines where to
 There are two steps involved in my code. The first step is to state estimation and the second is trajectory generation. I chose to use trajectory generation as this is more suitable to sparse environment like the highway, while other methods, Hybrid A* for example, is better at dense environment like parking spots.
 
 ### 2. State Estimation (main.cpp, line 345-402)
-legend: Lane 0 = Leftmost, Lane 1 = middle, Lane 2 = Rightmost
+(Legend: Lane 0 = Leftmost, Lane 1 = middle, Lane 2 = Rightmost)
 ![alt text](StateMachine.png)
 I found above 5 states to be sufficient for this task. The vehicle is commanded to stay in the middle or right lane by default, unless there is a slow traffic ahead. When slow traffic is detected, the vehicle first tries to pass from the left. If such is not possible, then it tries to pass from right. Note that passing from right is not a well-mannered maneuver, therefore passing from left is considered first. If neither is possible, the vehicle stays in the same lane and adjust the speed to the car in front of it.
 
